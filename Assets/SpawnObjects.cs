@@ -11,6 +11,14 @@ public class SpawnObjects : MonoBehaviour
     [SerializeField] GameObject rock;
     [SerializeField] GameObject wall;
 
+    [Space(15)]
+
+    [SerializeField] SoundPlayer soundPlayer;
+    
+    [Space(10)]
+
+    [SerializeField] PlayerMove player;
+
     GameObject g_obj;
     ScrollingObject so;
 
@@ -20,20 +28,22 @@ public class SpawnObjects : MonoBehaviour
     Types[] prev_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
     Types[] current_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
 
-    // Start is called before the first frame update
     void Start()
     {
-
+        game_running = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!game_running) return;
+
         t_counter += Time.deltaTime;
         if(t_counter >= ScrollingObject.t_interval)
         {
             t_counter = 0;
             spawn();
+            if(soundPlayer != null) soundPlayer.tick();
         }
     }
 
@@ -92,22 +102,30 @@ public class SpawnObjects : MonoBehaviour
             {
                 g_obj.transform.parent = this.transform;
                 so = g_obj.GetComponent<ScrollingObject>();
-                if(so != null) so.spawn(i);
+                if(so != null) so.spawn(i, player);
                 else Debug.Log("scrolling object missing");
             }
             prev_col[i] = current_col[i];
-
         }
 
         //Debug.Log("Spawn Column: " + current_col[0] + ", " + current_col[1] + ", " + current_col[2] + ", " + current_col[3] + ", " + current_col[4]);
         //Debug.Log("Spawn! snow: " + snow_count + ", rock: " + rock_count + ", wall: " + wall_count + "\n;");
     }
 
-    public void gameOver()
+    public void gameOver(bool win = false)
     {
         game_running = false;
-        //game over stuff....
+
+        if(soundPlayer != null) 
+        {
+            if(win)
+                soundPlayer.victory();
+            else
+                soundPlayer.gameOver();
+        }
+
         gameObject.SetActive(false);
+        enabled = false;
     }
 
 }

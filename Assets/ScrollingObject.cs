@@ -18,19 +18,26 @@ public class ScrollingObject : MonoBehaviour
 
     SpriteRenderer sr;
 
+    PlayerMove player;
+    Snowball snowBall;
+
+    [Space(10)]
+
     [SerializeField] Vector3 offset;
 
-    void Start()
+    void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         if(sr != null) sr.enabled = true;
     }
 
-    public void spawn(int r)
+    public void spawn(int r, PlayerMove p)
     {
         row = Mathf.Clamp(r, 0, 4);
 
         transform.position = new Vector3(d_xpos[col] + offset.x, d_ypos[row] + offset.y, 0);
+        player = p;
+
         if(sr != null) sr.enabled = true;
     }
 
@@ -42,6 +49,7 @@ public class ScrollingObject : MonoBehaviour
         {
             t_counter = 0;
             move();
+            if(col == 9 || col == 10) check_collisions();
         }
     }
 
@@ -54,10 +62,18 @@ public class ScrollingObject : MonoBehaviour
             if(col == 9 || col == 10) sr.enabled = false;   //hide but don't disable
             else if(col == (col_count - 1)) sr.enabled = true;  //show again
         }
-        
+
         if(col >= col_count)
             Destroy(gameObject);    //off screen - out of sight out of mind
         else
             transform.position = new Vector3(d_xpos[col % col_count] + offset.x, transform.position.y, 0);  // move to next position
+    }
+
+    void check_collisions()
+    {
+        if(player == null || !gameObject.activeSelf) return;
+        
+        if(row == player.getRow() && (col == 10 || col == 9))
+            player.collision(gameObject);   //pass on to snowball.collision(gameObject)
     }
 }
