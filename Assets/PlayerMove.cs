@@ -13,6 +13,9 @@ public class PlayerMove : MonoBehaviour
     int row = 2;    //middle
     float x_pos = -7.841f;
 
+    bool down_key = false;
+    bool up_key = false;
+
     void Start()
     {
         transform.position = new Vector3(x_pos, d_ypos[row], 0);        
@@ -33,9 +36,20 @@ public class PlayerMove : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         float e = 0.1f;
         
-        if(vertical > e && row > 0) row--;
-        if(vertical < -e && row < 4) row++;
-    
+        if(vertical > e && !down_key) 
+        {
+            down_key = true;
+            if(row > 0) row--;
+        }
+        else down_key = false;
+
+        if(vertical < -e && !up_key) 
+        {
+            up_key = true;
+            if(row < 4) row++;
+        }
+        else up_key = false;
+
         row = Mathf.Clamp(row, 0, 4);
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
 
