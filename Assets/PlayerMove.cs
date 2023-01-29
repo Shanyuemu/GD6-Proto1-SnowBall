@@ -28,27 +28,31 @@ public class PlayerMove : MonoBehaviour
         
         if(t_counter >= t_interval)
             t_counter = 0;
-        else 
-            return;
+        //else 
+        //    return;
 
         //execute
 
         float vertical = Input.GetAxis("Vertical");
-        float e = 0.1f;
+        float e = 0.1f;     //error
         
-        if(vertical > e && !down_key) 
+        if(vertical > e) 
         {
+            if(down_key) return;
             down_key = true;
             if(row > 0) row--;
         }
-        else down_key = false;
+        else 
+            down_key = false;
 
-        if(vertical < -e && !up_key) 
+        if(vertical < -e) 
         {
+            if(up_key) return;
             up_key = true;
             if(row < 4) row++;
         }
-        else up_key = false;
+        else 
+            up_key = false;
 
         row = Mathf.Clamp(row, 0, 4);
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
