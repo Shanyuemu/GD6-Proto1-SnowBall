@@ -15,11 +15,14 @@ public class Snowball : MonoBehaviour
     [Space(10)]
 
     [SerializeField] SpawnObjects gameLogic;
+    [SerializeField] SoundPlayer soundPlayer;
 
     [Space(10)]
 
-    [SerializeField] int flashTimes = 6;
+    [SerializeField] int flashTimes = 2;
     [SerializeField] float flashRate = 0.25f;
+
+    bool damageCoolDown = false;
 
     int score = 0;
     int size = 1;
@@ -28,7 +31,6 @@ public class Snowball : MonoBehaviour
     void Start()
     {
         setSize(3);
-        playerDamaged();
     }
 
     public void setSize(int s)
@@ -45,52 +47,54 @@ public class Snowball : MonoBehaviour
 
     public void grow()
     {
+        if(soundPlayer != null) soundPlayer.positive();
         setSize(size + 1);
         score++;
     }
 
     public void shrink()
     {
+        if(soundPlayer != null) soundPlayer.damage();
         setSize(size - 1);
+        StartCoroutine("playerFlash");
     }
 
     public void gameOver()
     {
         if(size != 0) setSize(0);
+        StartCoroutine("playerFlash");
         if(gameLogic != null) gameLogic.gameOver();
     }
 
-    void Update()
+    public void collision(GameObject col)
     {
-        
-    }
+        if(size <= 0) return;
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        string t = col.gameObject.tag;
-        Debug.Log("Snowball trigger: " + t);
+        string t = col.tag;
+        //Debug.Log("Snowball collision: " + t);
 
         if(t == "Snow")
         {
-            Destroy(col.gameObject);
+            Destroy(col);
             grow();
         }
-        else if (t == "Rock")
+        else
         {
-            Destroy(col.gameObject);
-            shrink();
+            if(damageCoolDown) return;
+            if (t == "Rock")
+            {
+                Destroy(col);
+                shrink();
+            }
+            else if (t == "Wall")
+                gameOver();
         }
-        else if (t == "Wall")
-            gameOver();
-    }
-
-    void playerDamaged()
-    {
-        StartCoroutine("playerFlash");
     }
 
     IEnumerator playerFlash()
     {
+        damageCoolDown = true;
+
         bool l1 = layer1.enabled;
         bool l2 = layer2.enabled;
         bool l3 = layer3.enabled;
@@ -104,10 +108,16 @@ public class Snowball : MonoBehaviour
             yield return new WaitForSeconds(flashRate);
         
             foxSprite.enabled = true;
-            layer1.enabled = l1;
-            layer2.enabled = l2;
-            layer3.enabled = l3;
+            layer1.enabled = (size > 0);
+            layer2.enabled = (size > 1);
+            layer3.enabled = (size > 2);
             yield return new WaitForSeconds(flashRate);
         }
+
+        damageCoolDown = false;
+
+        if(size == 0) 
+            foxSprite.gameObject.SetActive(false);
     }
+
 }
