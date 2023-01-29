@@ -98,7 +98,7 @@ public class SpawnObjects : MonoBehaviour
             prev_col[i] = current_col[i];
 
         }
-        
+
         //Debug.Log("Spawn Column: " + current_col[0] + ", " + current_col[1] + ", " + current_col[2] + ", " + current_col[3] + ", " + current_col[4]);
         //Debug.Log("Spawn! snow: " + snow_count + ", rock: " + rock_count + ", wall: " + wall_count + "\n;");
     }

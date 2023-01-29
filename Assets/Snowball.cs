@@ -8,9 +8,18 @@ public class Snowball : MonoBehaviour
     [SerializeField] SpriteRenderer layer2;
     [SerializeField] SpriteRenderer layer3;
 
+    [Space(5)]
+
+    [SerializeField] SpriteRenderer foxSprite;
+
     [Space(10)]
 
     [SerializeField] SpawnObjects gameLogic;
+
+    [Space(10)]
+
+    [SerializeField] int flashTimes = 6;
+    [SerializeField] float flashRate = 0.25f;
 
     int score = 0;
     int size = 1;
@@ -19,6 +28,7 @@ public class Snowball : MonoBehaviour
     void Start()
     {
         setSize(3);
+        playerDamaged();
     }
 
     public void setSize(int s)
@@ -72,5 +82,32 @@ public class Snowball : MonoBehaviour
         }
         else if (t == "Wall")
             gameOver();
+    }
+
+    void playerDamaged()
+    {
+        StartCoroutine("playerFlash");
+    }
+
+    IEnumerator playerFlash()
+    {
+        bool l1 = layer1.enabled;
+        bool l2 = layer2.enabled;
+        bool l3 = layer3.enabled;
+
+        for(int i=0; i<flashTimes; i++)
+        {
+            foxSprite.enabled = false;
+            layer1.enabled = false;
+            layer2.enabled = false;
+            layer3.enabled = false;
+            yield return new WaitForSeconds(flashRate);
+        
+            foxSprite.enabled = true;
+            layer1.enabled = l1;
+            layer2.enabled = l2;
+            layer3.enabled = l3;
+            yield return new WaitForSeconds(flashRate);
+        }
     }
 }
