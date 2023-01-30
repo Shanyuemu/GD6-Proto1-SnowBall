@@ -54,11 +54,15 @@ public class Snowball : MonoBehaviour
     {
         if(s == size) return; //no change
         size = Mathf.Clamp(s, 0, 3);
-
+/* 
         layer1.enabled = (size > 0);
         layer2.enabled = (size > 1);
         layer3.enabled = (size > 2);
-
+ */
+        layer1.enabled = (size == 1);
+        layer2.enabled = (size == 2);
+        layer3.enabled = (size == 3);
+        
         if(size <= 0) gameOver();
     }
 
@@ -81,6 +85,11 @@ public class Snowball : MonoBehaviour
         if(size != 0) setSize(0);
         StartCoroutine("playerFlash");
         if(gameLogic != null) gameLogic.gameOver();
+    }
+
+    public void victory()
+    {
+        if(gameLogic != null) gameLogic.gameOver(true);
     }
 
     public void collision(GameObject col)
