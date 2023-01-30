@@ -25,7 +25,6 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
-        unblockRows();
     }
 
     public void restart()
@@ -36,7 +35,7 @@ public class PlayerMove : MonoBehaviour
         t_counter = 0;
 
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
-        unblockRows();
+        //unblockRows();
     }
    
     // Update is called once per frame
@@ -55,14 +54,12 @@ public class PlayerMove : MonoBehaviour
     //----
 
         float vertical = Input.GetAxis("Vertical");
-        float dr = 0;
 
         if(vertical > e) 
         {
             if(down_key) return;
             down_key = true;
             
-            //if(row > 0) dr = -1;
             if(row > 0) row--;
         }
         else 
@@ -73,20 +70,14 @@ public class PlayerMove : MonoBehaviour
             if(up_key) return;
             up_key = true;
             
-            //if(row < 4) dr = 1;
             if(row < 4) row++;
-
         }
         else 
             up_key = false;
 
-        /* if(blocked[(int) (Mathf.Clamp(row + dr, 0, 4))])
-            Debug.Log("movement blocked: " + row + " -> " + Mathf.Clamp((row - 1), 0, 4));
-        else
-        { */
-            row = (int) Mathf.Clamp(row + dr, 0, 4);
-            transform.position = new Vector3(x_pos, d_ypos[row], 0);
-        //}
+    
+        row = (int) Mathf.Clamp(row, 0, 4);
+        transform.position = new Vector3(x_pos, d_ypos[row], 0);
     }
 
     public void blockRow(int r, bool b = true)
