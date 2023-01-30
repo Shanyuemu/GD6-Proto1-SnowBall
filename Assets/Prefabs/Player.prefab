@@ -1766,7 +1766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679cb659c6ecc467687f0d00a2f9f892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snowball: {fileID: 0}
+  snowball: {fileID: 133160300562930904}
 --- !u!1 &133160300421675242
 GameObject:
   m_ObjectHideFlags: 0
