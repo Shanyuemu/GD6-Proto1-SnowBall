@@ -105,7 +105,7 @@ public class SpawnObjects : MonoBehaviour
  
         //player.unblockRows();
 
-        for(int i=0; i<5; i++)  //for all 5 rows...
+        for(int i=0; i<5; i++)  //for all 5 rows...generate random objects
         {
             float min = 0.0f;                   //probability (wall : rock : snow : nothing -> 2:3:5:10)
 
