@@ -9,19 +9,14 @@ public class ReadCSV : MonoBehaviour
 
     public string[,] TextArray;
     
-
-    // Start is called before the first frame update
     void Start()
     {
-
         string[] strLines = CSVFile.text.Split(Environment.NewLine);
         //TextArray = CSVFile.text.Split(';');
 
         string[] Row = strLines[0].Split(';');
 
         TextArray = new string[strLines.Length,Row.Length];
-
-        
 
         for(int i = 0; i < strLines.Length; i++)
         {
@@ -32,20 +27,8 @@ public class ReadCSV : MonoBehaviour
                 TextArray[i, k] = TempRow[k];
                 Debug.Log("Row" + i.ToString() + " = " + TextArray[i, k]);
             }
-
            
         }
-
-
     }
-
-    // Update is called once per frame
-    void Update()
-    {
- 
-
-
-    }
-
 
 }
