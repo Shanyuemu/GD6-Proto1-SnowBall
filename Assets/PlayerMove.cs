@@ -17,11 +17,15 @@ public class PlayerMove : MonoBehaviour
     bool down_key = false;
     bool up_key = false;
 
+    bool[] blocked = {false, false, false, false, false};
+
     [SerializeField] Snowball snowball;
+
 
     void Awake()
     {
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
+        unblockRows();
     }
 
     public void restart()
@@ -30,7 +34,9 @@ public class PlayerMove : MonoBehaviour
         down_key = false;
         up_key = false;
         t_counter = 0;
+
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
+        unblockRows();
     }
    
     // Update is called once per frame
@@ -49,11 +55,14 @@ public class PlayerMove : MonoBehaviour
     //----
 
         float vertical = Input.GetAxis("Vertical");
-        
+        float dr = 0;
+
         if(vertical > e) 
         {
             if(down_key) return;
             down_key = true;
+            
+            //if(row > 0) dr = -1;
             if(row > 0) row--;
         }
         else 
@@ -63,25 +72,34 @@ public class PlayerMove : MonoBehaviour
         {
             if(up_key) return;
             up_key = true;
+            
+            //if(row < 4) dr = 1;
             if(row < 4) row++;
+
         }
         else 
             up_key = false;
 
-        row = Mathf.Clamp(row, 0, 4);
-        transform.position = new Vector3(x_pos, d_ypos[row], 0);
+        /* if(blocked[(int) (Mathf.Clamp(row + dr, 0, 4))])
+            Debug.Log("movement blocked: " + row + " -> " + Mathf.Clamp((row - 1), 0, 4));
+        else
+        { */
+            row = (int) Mathf.Clamp(row + dr, 0, 4);
+            transform.position = new Vector3(x_pos, d_ypos[row], 0);
+        //}
     }
 
-    public int blockRow(int r)
+    public void blockRow(int r, bool b = true)
     {
-        blocked[r] = true;
-        return r;
+        blocked[r] = b;
     }
 
     public void unblockRows()
     {
         for(int i=0;i<5;i++)
-            blocked[r] = false;
+            blocked[i] = false;
+
+        Debug.Log("unblock rows");
     }
 
     public int getRow()

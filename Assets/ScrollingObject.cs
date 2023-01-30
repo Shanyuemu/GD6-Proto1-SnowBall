@@ -16,6 +16,9 @@ public class ScrollingObject : MonoBehaviour
     int row = 0;    //0-4, initialized by spawn
     int col = 0;    //far right
 
+    int prev_p_row = 0;
+    int p_row = 0;
+
     SpriteRenderer sr;
     PlayerMove player;
     Snowball snowBall;
@@ -36,6 +39,7 @@ public class ScrollingObject : MonoBehaviour
 
         transform.position = new Vector3(d_xpos[col] + offset.x, d_ypos[row] + offset.y, 0);
         player = p;
+        p_row = player.getRow();
 
         if(sr != null) sr.enabled = true;
     }
@@ -43,6 +47,8 @@ public class ScrollingObject : MonoBehaviour
 
     void Update()
     {
+        p_row = (player == null) ? 0 : player.getRow();
+
         t_counter += Time.deltaTime;
         if(t_counter >= t_interval)
         {
@@ -51,16 +57,19 @@ public class ScrollingObject : MonoBehaviour
             if(col == 9 || col == 10) 
             {
                 check_collisions();
-                check_horizontal();
             }
         }
+        
+        //if(tag == "Horizontal") check_horizontal();
+
+        prev_p_row = p_row;
     }
 
     void move() //move left / scroll
     {
         col++;
         
-        if(tag != "Wall" || tag != "Horizontal")
+        if(tag != "Wall" )//|| tag != "Horizontal")
         {
             if(col == 9 || col == 10) sr.enabled = false;   //hide but don't disable
         }
@@ -112,7 +121,7 @@ public class ScrollingObject : MonoBehaviour
         }
         else if(row == 2) //2-3
         {
-            if(p_row <= row) 
+            if(p_row <= 2) 
             {
                 blockRow(3);
                 blockRow(4);
@@ -136,6 +145,12 @@ public class ScrollingObject : MonoBehaviour
                 blockRow(3);
             }
         }
+    }
+
+    void blockRow(int r)
+    {
+        if(player == null) return;
+        player.blockRow(r);
     }
 
     void OnDisable()

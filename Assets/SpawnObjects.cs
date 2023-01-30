@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SpawnObjects : MonoBehaviour
 {
-    public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3, Horizontal = 4};
+    public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3}; //, Horizontal = 4};
 
     [SerializeField] int level_length = 20;
     int level_progress = 0;
@@ -77,12 +77,14 @@ public class SpawnObjects : MonoBehaviour
         int wall_count = 0;     //0-(4 - rock_count)
         int horizontal_count = 0;
  
-        player.unblockRows();
+        //player.unblockRows();
 
         for(int i=0; i<5; i++)  //for all 5 rows...
         {
             float min = 0.0f;                   //probability (wall : rock : snow : nothing -> 2:3:5:10)
 
+            //if (horizontal_count > 2 || i>4)    //no more than 3 horizontal platforms and do not spawn one on the 5th row
+            //    min = 0.3f;
             if (wall_count + rock_count + horizontal_count > 3) 
                 min = 0.5f;                     //no more than 4 rocks and walls combined
             else if (rock_count > 2) 
@@ -91,10 +93,8 @@ public class SpawnObjects : MonoBehaviour
                 min = 1.0f;                     //at least one empty space, and an empty space after each object
 
             r = Random.Range(min, 2.0f);
-            if(r < 0.15f)        //0.0f <= r < = 0.15f
+            if(r < 0.2f)        //0.0f <= r < = 0.15f
                 t = Types.Wall;
-            else if(r < 0.3f)   //0.15f <= r < = 0.3f
-                t = Types.Horizontal;
             else if(r < 0.5f)   //0.3f <= r < = 0.5f
                 t = Types.Rock;
             else if(r < 1.0f)   //0.5f <= r < = 1.0f
@@ -121,10 +121,10 @@ public class SpawnObjects : MonoBehaviour
                     wall_count++;
                     g_obj = Instantiate(wall);
                 break;
-                case Types.Horizontal: //horizontal wall
-                    horizontal_count++;
-                    g_obj = Instantiate(horizontal);
-                break;
+                //case Types.Horizontal: //horizontal wall
+                //    horizontal_count++;
+                //    g_obj = Instantiate(horizontal);
+                //break;
             }
             
             if(t != Types.None && g_obj != null)
