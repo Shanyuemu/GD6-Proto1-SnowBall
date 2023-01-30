@@ -28,9 +28,26 @@ public class Snowball : MonoBehaviour
     int size = 1;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        setSize(3);
+        setSize(2);
+    }
+
+    void Update()
+    {
+        if(gameLogic != null)
+        {
+            if(!gameLogic.gameObject.activeSelf && Input.GetKeyDown(KeyCode.Space))
+            {
+                gameLogic.gameObject.SetActive(true);
+                gameLogic.restart();
+
+                foxSprite.gameObject.SetActive(true);
+
+                setSize(2);
+                score = 0;
+            }
+        }
     }
 
     public void setSize(int s)
@@ -118,6 +135,11 @@ public class Snowball : MonoBehaviour
 
         if(size == 0) 
             foxSprite.gameObject.SetActive(false);
+    }
+
+    public bool gameRunning()
+    {
+        return (gameLogic.gameObject.activeSelf) ? gameLogic.gameRunning() : false;
     }
 
 }

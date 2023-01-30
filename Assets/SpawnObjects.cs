@@ -7,6 +7,9 @@ public class SpawnObjects : MonoBehaviour
 {
     public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3};
 
+    [SerializeField] int level_length = 20;
+    int level_progress = 0;
+
     [SerializeField] GameObject snow;
     [SerializeField] GameObject rock;
     [SerializeField] GameObject wall;
@@ -28,27 +31,43 @@ public class SpawnObjects : MonoBehaviour
     Types[] prev_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
     Types[] current_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
 
-    void Start()
+    void Awake()
     {
         game_running = true;
+        level_progress = 0;
+    }
+
+    public void restart()
+    {
+        game_running = true;
+        level_progress = 0;
+        
+        player.gameObject.SetActive(true);
+        player.enabled = true;
+        player.restart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!game_running) return;
-
         t_counter += Time.deltaTime;
         if(t_counter >= ScrollingObject.t_interval)
         {
             t_counter = 0;
-            spawn();
             if(soundPlayer != null) soundPlayer.tick();
+            spawn();
         }
     }
 
     void spawn()
     {
+        level_progress++;
+        if(level_progress >= level_length) 
+        {
+            gameOver(true); //victory
+            return;   
+        }
+
         Types t = Types.None;
         float r = 0.0f;
 
@@ -60,6 +79,7 @@ public class SpawnObjects : MonoBehaviour
         {
             float min = 0.0f;                   //probability (wall : rock : snow : nothing -> 2:3:5:10)
 
+
             if (wall_count + rock_count > 3) 
                 min = 0.5f;                     //no more than 4 rocks and walls combined
             else if (rock_count > 2) 
@@ -68,9 +88,9 @@ public class SpawnObjects : MonoBehaviour
                 min = 1.0f;                     //at least one empty space, and an empty space after each object
 
             r = Random.Range(min, 2.0f);
-            if(r < 0.2f)        //0.0f <= r < = 0.2f
+            if(r < 0.2)        //0.0f <= r < = 0.15f
                 t = Types.Wall;
-            else if(r < 0.5f)   //0.2f <= r < = 0.5f
+            else if(r < 0.5f)   //0.3f <= r < = 0.5f
                 t = Types.Rock;
             else if(r < 1.0f)   //0.5f <= r < = 1.0f
                 t = Types.Snow;
@@ -112,6 +132,11 @@ public class SpawnObjects : MonoBehaviour
         //Debug.Log("Spawn! snow: " + snow_count + ", rock: " + rock_count + ", wall: " + wall_count + "\n;");
     }
 
+    public bool gameRunning()
+    {
+        return game_running;
+    }
+
     public void gameOver(bool win = false)
     {
         game_running = false;
@@ -125,7 +150,6 @@ public class SpawnObjects : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        enabled = false;
     }
 
 }

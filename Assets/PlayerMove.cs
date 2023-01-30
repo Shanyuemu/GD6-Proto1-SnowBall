@@ -19,14 +19,28 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] Snowball snowball;
 
-    void Start()
+    void Awake()
     {
-        transform.position = new Vector3(x_pos, d_ypos[row], 0);        
+        transform.position = new Vector3(x_pos, d_ypos[row], 0);
     }
 
+    public void restart()
+    {
+        row = 2;
+        down_key = false;
+        up_key = false;
+        t_counter = 0;
+        transform.position = new Vector3(x_pos, d_ypos[row], 0);
+    }
+   
     // Update is called once per frame
     void Update()
     {
+        if(snowball != null) 
+        {
+            if(!snowball.gameRunning()) return;
+        }
+
         t_counter += Time.deltaTime;
         
         if(t_counter >= t_interval)
@@ -56,7 +70,6 @@ public class PlayerMove : MonoBehaviour
 
         row = Mathf.Clamp(row, 0, 4);
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
-
     }
 
     public int getRow()

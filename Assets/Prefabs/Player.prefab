@@ -1766,6 +1766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679cb659c6ecc467687f0d00a2f9f892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snowball: {fileID: 0}
 --- !u!1 &133160300421675242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1860,8 +1861,6 @@ GameObject:
   m_Component:
   - component: {fileID: 133160300562930905}
   - component: {fileID: 133160300562930904}
-  - component: {fileID: 133160300562930907}
-  - component: {fileID: 133160300562930906}
   m_Layer: 3
   m_Name: SnowBall
   m_TagString: Snowball
@@ -1904,55 +1903,9 @@ MonoBehaviour:
   layer3: {fileID: 133160298941163479}
   foxSprite: {fileID: 133160298845246789}
   gameLogic: {fileID: 0}
-  flashTimes: 6
+  soundPlayer: {fileID: 0}
+  flashTimes: 4
   flashRate: 0.25
---- !u!61 &133160300562930907
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 133160300562930910}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.2, y: 1.2}
-  m_EdgeRadius: 0
---- !u!50 &133160300562930906
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 133160300562930910}
-  m_BodyType: 2
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &133160300585837935
 GameObject:
   m_ObjectHideFlags: 0
