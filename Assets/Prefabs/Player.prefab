@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 133160298845246789}
   m_Layer: 3
   m_Name: Fox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

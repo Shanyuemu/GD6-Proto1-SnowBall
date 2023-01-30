@@ -21,7 +21,6 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] Snowball snowball;
 
-
     void Awake()
     {
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
@@ -102,4 +101,10 @@ public class PlayerMove : MonoBehaviour
     {
         snowball.collision(g);
     }
+
+    public void victory()
+    {
+        snowball.victory();
+    }
+
 }

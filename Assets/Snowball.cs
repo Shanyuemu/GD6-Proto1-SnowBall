@@ -53,12 +53,13 @@ public class Snowball : MonoBehaviour
     public void setSize(int s)
     {
         if(s == size) return; //no change
+        
         size = Mathf.Clamp(s, 0, 3);
 
-        layer1.enabled = (size > 0);
-        layer2.enabled = (size > 1);
-        layer3.enabled = (size > 2);
-
+        layer1.enabled = (size == 1);
+        layer2.enabled = (size == 2);
+        layer3.enabled = (size == 3);
+        
         if(size <= 0) gameOver();
     }
 
@@ -81,6 +82,11 @@ public class Snowball : MonoBehaviour
         if(size != 0) setSize(0);
         StartCoroutine("playerFlash");
         if(gameLogic != null) gameLogic.gameOver();
+    }
+
+    public void victory()
+    {
+        if(gameLogic != null) gameLogic.gameOver(true);
     }
 
     public void collision(GameObject col)
@@ -112,10 +118,6 @@ public class Snowball : MonoBehaviour
     {
         damageCoolDown = true;
 
-        bool l1 = layer1.enabled;
-        bool l2 = layer2.enabled;
-        bool l3 = layer3.enabled;
-
         for(int i=0; i<flashTimes; i++)
         {
             foxSprite.enabled = false;
@@ -125,9 +127,9 @@ public class Snowball : MonoBehaviour
             yield return new WaitForSeconds(flashRate);
         
             foxSprite.enabled = true;
-            layer1.enabled = (size > 0);
-            layer2.enabled = (size > 1);
-            layer3.enabled = (size > 2);
+            layer1.enabled = (size == 1);
+            layer2.enabled = (size == 2);
+            layer3.enabled = (size == 3);
             yield return new WaitForSeconds(flashRate);
         }
 

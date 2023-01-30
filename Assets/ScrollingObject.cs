@@ -19,10 +19,11 @@ public class ScrollingObject : MonoBehaviour
     int prev_p_row = 0;
     int p_row = 0;
 
+    bool freeze = false;
+
     SpriteRenderer sr;
     PlayerMove player;
-    Snowball snowBall;
-
+    
     [Space(10)]
 
     [SerializeField] Vector3 offset;
@@ -41,12 +42,16 @@ public class ScrollingObject : MonoBehaviour
         player = p;
         p_row = player.getRow();
 
+        freeze = false;
+
         if(sr != null) sr.enabled = true;
     }
 
 
     void Update()
     {
+        if(freeze) return;
+
         p_row = (player == null) ? 0 : player.getRow();
 
         t_counter += Time.deltaTime;
@@ -55,7 +60,8 @@ public class ScrollingObject : MonoBehaviour
             t_counter = 0;
             move();
         }
-        if(col == 9 || col == 10) 
+
+        if(col == 9 || col == 10)
         {
             check_collisions();
             //if(tag == "Horizontal") check_horizontal();
@@ -67,8 +73,20 @@ public class ScrollingObject : MonoBehaviour
     void move() //move left / scroll
     {
         col++;
-        
-        if(tag != "Wall" )//|| tag != "Horizontal")
+        if(freeze) return;
+
+        if(tag == "Snowman")
+        {
+            if(col > 8)
+            {
+                if(player == null) return;
+                player.victory();    //indirect call to game logic
+                freeze = true;
+                //stop moving...
+                return;
+            }
+        }
+        else if(tag != "Wall" )//|| tag != "Horizontal")
         {
             if(col == 9 || col == 10) sr.enabled = false;   //hide but don't disable
         }
@@ -77,6 +95,7 @@ public class ScrollingObject : MonoBehaviour
             Destroy(gameObject);    //off screen - out of sight out of mind
         else
             transform.position = new Vector3(d_xpos[col % col_count] + offset.x, transform.position.y, 0);  // move to next position
+
     }
 
     public void check_collisions()
@@ -86,6 +105,8 @@ public class ScrollingObject : MonoBehaviour
         if(row == player.getRow() && (col == 9 || col == 10))
             player.collision(gameObject);
     }
+
+//----
 
     public void check_horizontal()
     {

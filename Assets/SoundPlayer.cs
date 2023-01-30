@@ -35,6 +35,7 @@ public class SoundPlayer : MonoBehaviour
 
     public void tick()
     {
+        if(audioSource.isPlaying) return; //do not prioritize ticks...
         playSound(s_tick);
     }
 
