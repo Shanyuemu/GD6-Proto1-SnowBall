@@ -54,13 +54,12 @@ public class ScrollingObject : MonoBehaviour
         {
             t_counter = 0;
             move();
-            if(col == 9 || col == 10) 
-            {
-                check_collisions();
-            }
         }
-        
-        //if(tag == "Horizontal") check_horizontal();
+        if(col == 9 || col == 10) 
+        {
+            check_collisions();
+            //if(tag == "Horizontal") check_horizontal();
+        }
 
         prev_p_row = p_row;
     }
