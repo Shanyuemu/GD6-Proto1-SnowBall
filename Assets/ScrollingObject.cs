@@ -106,6 +106,8 @@ public class ScrollingObject : MonoBehaviour
             player.collision(gameObject);
     }
 
+//----
+
     public void check_horizontal()
     {
         if(player == null) return;
