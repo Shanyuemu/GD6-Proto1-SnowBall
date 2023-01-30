@@ -72,6 +72,18 @@ public class PlayerMove : MonoBehaviour
         transform.position = new Vector3(x_pos, d_ypos[row], 0);
     }
 
+    public int blockRow(int r)
+    {
+        blocked[r] = true;
+        return r;
+    }
+
+    public void unblockRows()
+    {
+        for(int i=0;i<5;i++)
+            blocked[r] = false;
+    }
+
     public int getRow()
     {
         return row;
