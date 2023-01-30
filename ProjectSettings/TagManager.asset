@@ -9,6 +9,7 @@ TagManager:
   - Snowball
   - Wall
   - Horizontal
+  - Snowman
   layers:
   - Default
   - TransparentFX

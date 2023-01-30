@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SpawnObjects : MonoBehaviour
 {
-    public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3}; //, Horizontal = 4};
+    public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3, Snowman = 4}; //, Horizontal = 4};
 
     [SerializeField] int level_length = 20;
     int level_progress = 0;
@@ -14,6 +14,7 @@ public class SpawnObjects : MonoBehaviour
     [SerializeField] GameObject rock;
     [SerializeField] GameObject wall;
     [SerializeField] GameObject horizontal;
+    [SerializeField] GameObject snowman;
 
     [Space(15)]
 
@@ -25,9 +26,11 @@ public class SpawnObjects : MonoBehaviour
 
     GameObject g_obj;
     ScrollingObject so;
+    GameObject snowman_inst;
 
     float t_counter = 0;
     public static bool game_running = true;
+    bool spawnedSnowman = false;
 
     Types[] prev_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
     Types[] current_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
@@ -35,14 +38,23 @@ public class SpawnObjects : MonoBehaviour
     void Awake()
     {
         game_running = true;
+        spawnedSnowman = false;
         level_progress = 0;
     }
 
     public void restart()
     {
         game_running = true;
+        spawnedSnowman = false;
         level_progress = 0;
         
+        
+        if(snowman_inst != null)
+        {
+//            snowman_inst.SetActive(false);
+            Destroy(snowman_inst);
+        }
+
         player.gameObject.SetActive(true);
         player.enabled = true;
         player.restart();
@@ -60,12 +72,26 @@ public class SpawnObjects : MonoBehaviour
         }
     }
 
-    void spawn()
+    void spawn()    //random
     {
+        if(spawnedSnowman || !game_running) return;
+
         level_progress++;
+        
         if(level_progress >= level_length) 
         {
-            gameOver(true); //victory
+            if(!spawnedSnowman && (level_progress >= level_length + 8))
+            {
+                if(snowman_inst != null) Destroy(snowman_inst);
+                snowman_inst = Instantiate(snowman);
+                
+                so = snowman_inst.GetComponent<ScrollingObject>();
+                if(so != null) so.spawn(2, player);
+
+                spawnedSnowman = true;
+            }
+
+            //gameOver(true); //victory
             return;   
         }
 
@@ -157,7 +183,7 @@ public class SpawnObjects : MonoBehaviour
             else
                 soundPlayer.gameOver();
         }
-
+        
         gameObject.SetActive(false);
     }
 
