@@ -86,12 +86,13 @@ public class ScrollingObject : MonoBehaviour
                 return;
             }
         }
-        else if(tag != "Wall" )//|| tag != "Horizontal")
+        
+        if(tag != "Wall" )//|| tag != "Horizontal")
         {
             if(col == 9 || col == 10) sr.enabled = false;   //hide but don't disable
         }
 
-        if(col > col_count)
+        if(col >= col_count)
             Destroy(gameObject);    //off screen - out of sight out of mind
         else
             transform.position = new Vector3(d_xpos[col % col_count] + offset.x, transform.position.y, 0);  // move to next position
