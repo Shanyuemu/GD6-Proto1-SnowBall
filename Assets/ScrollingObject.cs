@@ -6,10 +6,10 @@ public class ScrollingObject : MonoBehaviour
 {
     public const float t_interval = 0.5f;  //move every t_interval seconds
     
-    public const int col_count = 12;
+    public const int col_count = 10;
     public const int row_count = 5;
 
-    public static float[] d_xpos = { 8.5f, 6.83f, 5.16f, 3.5f, 1.83f, 0.17f, -1.5f, -3.17f, -4.83f, -6.5f, -8.17f, -9.05f };        //column -> y position (right to left)
+    public static float[] d_xpos = { 8.5f, 6.83f, 5.16f, 3.5f, 1.83f, 0.17f, -1.5f, -3.17f, -4.83f, -6.5f, -8.17f }; //, -9.05f };        //column -> y position (right to left)
     public static float[] d_ypos = { 3.03f, 1.17f, -0.7f, -2.56f, -4.42f };      //rows -> x position (top to bottom)
     
     float t_counter = 0;
@@ -41,7 +41,7 @@ public class ScrollingObject : MonoBehaviour
         if(sr != null) sr.enabled = true;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         t_counter += Time.deltaTime;
@@ -49,7 +49,8 @@ public class ScrollingObject : MonoBehaviour
         {
             t_counter = 0;
             move();
-            if(col == 9 || col == 10) check_collisions();
+            if(col == 9 || col == 10) 
+                check_collisions();
         }
     }
 
@@ -60,10 +61,9 @@ public class ScrollingObject : MonoBehaviour
         if(tag != "Wall")
         {
             if(col == 9 || col == 10) sr.enabled = false;   //hide but don't disable
-            else if(col == (col_count - 1)) sr.enabled = true;  //show again
         }
 
-        if(col >= col_count)
+        if(col > col_count)
             Destroy(gameObject);    //off screen - out of sight out of mind
         else
             transform.position = new Vector3(d_xpos[col % col_count] + offset.x, transform.position.y, 0);  // move to next position
@@ -73,7 +73,12 @@ public class ScrollingObject : MonoBehaviour
     {
         if(player == null || !gameObject.activeSelf) return;
         
-        if(row == player.getRow() && (col == 10 || col == 9))
-            player.collision(gameObject);   //pass on to snowball.collision(gameObject)
+        if(row == player.getRow() && (col == 9 || col == 10))
+            player.collision(gameObject);
+    }
+
+    void OnDisable()
+    {
+        Destroy(gameObject);
     }
 }
