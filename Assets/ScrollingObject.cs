@@ -6,10 +6,10 @@ public class ScrollingObject : MonoBehaviour
 {
     public const float t_interval = 0.5f;  //move every t_interval seconds
     
-    public const int col_count = 11;
+    public const int col_count = 10;
     public const int row_count = 5;
 
-    public static float[] d_xpos = { 8.5f, 6.83f, 5.16f, 3.5f, 1.83f, 0.17f, -1.5f, -3.17f, -4.83f, -6.5f, -8.17f }; //, -9.05f };        //column -> y position (right to left)
+    public static float[] d_xpos = { 8.5f, 6.83f, 5.16f, 3.5f, 1.83f, 0.17f, -1.5f, -3.17f, -4.83f, -6.5f}; //, -8.17f }; //, -9.05f };        //column -> y position (right to left)
     public static float[] d_ypos = { 3.03f, 1.17f, -0.7f, -2.56f, -4.42f };      //rows -> x position (top to bottom)
     
     float t_counter = 0;

@@ -629,14 +629,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82979a9ce151c43dc821d8b35a9fa342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level_length: 50
   snow: {fileID: 4701772987926850828, guid: 73c1fa4c404374ac29aee186dc208fb7, type: 3}
   rock: {fileID: 1714281970988159472, guid: b28a78b657ffa4a03a69a6a5ede4818f, type: 3}
   wall: {fileID: 523887488866768292, guid: 3316fb48a14194fe385fa566fe3520d1, type: 3}
-  horizontal: {fileID: 782663770078752937, guid: c4a20b58abe204023825d330381f2d53, type: 3}
   snowman: {fileID: 421365871015210287, guid: bd5fe6fbb96044557b37f7feeb94bc76, type: 3}
   soundPlayer: {fileID: 519420033}
   player: {fileID: 1171923506}
+  CSVFile: {fileID: 4900000, guid: db2ebed6b149d4600ababe7117f6241c, type: 3}
 --- !u!1 &91921864
 GameObject:
   m_ObjectHideFlags: 0

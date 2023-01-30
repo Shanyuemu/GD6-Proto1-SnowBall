@@ -1,28 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 public class SpawnObjects : MonoBehaviour
 {
     public enum Types {None = 0, Snow = 1, Rock = 2, Wall = 3, Snowman = 4}; //, Horizontal = 4};
 
-    [SerializeField] int level_length = 20;
+    int level_length = 100;
+    int row_count = 5;
+
+
     int level_progress = 0;
 
     [SerializeField] GameObject snow;
     [SerializeField] GameObject rock;
     [SerializeField] GameObject wall;
-    [SerializeField] GameObject horizontal;
     [SerializeField] GameObject snowman;
+//    [SerializeField] GameObject horizontal;
 
     [Space(15)]
 
     [SerializeField] SoundPlayer soundPlayer;
+    [SerializeField] PlayerMove player;
     
     [Space(10)]
 
-    [SerializeField] PlayerMove player;
+    public TextAsset CSVFile;
+    public string[,] TextArray;
+    public int [,] level_array;
 
     GameObject g_obj;
     ScrollingObject so;
@@ -35,11 +41,16 @@ public class SpawnObjects : MonoBehaviour
     Types[] prev_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
     Types[] current_col = {Types.None, Types.None, Types.None, Types.None, Types.None};
 
+    void Start()
+    {
+    }
+    
     void Awake()
     {
         game_running = true;
         spawnedSnowman = false;
         level_progress = 0;
+        readLevelFile();
     }
 
     public void restart()
@@ -48,19 +59,13 @@ public class SpawnObjects : MonoBehaviour
         spawnedSnowman = false;
         level_progress = 0;
         
-        
-        if(snowman_inst != null)
-        {
-//            snowman_inst.SetActive(false);
-            Destroy(snowman_inst);
-        }
+        if(snowman_inst != null) Destroy(snowman_inst);
 
         player.gameObject.SetActive(true);
         player.enabled = true;
         player.restart();
     }
 
-    // Update is called once per frame
     void Update()
     {
         t_counter += Time.deltaTime;
@@ -72,7 +77,122 @@ public class SpawnObjects : MonoBehaviour
         }
     }
 
+    
+    public bool gameRunning()
+    {
+        return game_running;
+    }
+
+    public void gameOver(bool win = false)
+    {
+        game_running = false;
+
+        if(soundPlayer != null) 
+        {
+            if(win)
+                soundPlayer.victory();
+            else
+                soundPlayer.gameOver();
+        }
+        
+        gameObject.SetActive(false);
+    }
+
+    void readLevelFile()
+    {
+        string[] strLines = CSVFile.text.Split(Environment.NewLine);    //row count
+        string[] Row = strLines[0].Split(',');                          //level length
+    
+        TextArray = new string[strLines.Length, Row.Length];            //row count, level length
+
+        level_length = Row.Length - 1;
+        row_count = strLines.Length - 1;
+
+        Debug.Log("level length: " + level_length);
+        Debug.Log("row count: " + row_count);
+
+        for(int i = 0; i < strLines.Length; i++)        //0-5
+        {
+            string[] TempRow = strLines[i].Split(',');
+            
+            for(int k = 0; k < TempRow.Length; k++)     //0- level_length
+            {
+                TextArray[i, k] = TempRow[k];           //(row x column) = value
+            }
+        }
+    }
+
+
     void spawn()    //random
+    {
+        if(spawnedSnowman || !game_running) return;
+
+        level_progress++;
+        string[] col_s = {"", "", "", "", ""};
+        
+        //--------Snowman--------
+            if(level_progress > level_length) 
+            {
+                if(!spawnedSnowman && (level_progress >= level_length + 8))
+                {
+                    if(snowman_inst != null) Destroy(snowman_inst);
+                    snowman_inst = Instantiate(snowman);
+                    
+                    so = snowman_inst.GetComponent<ScrollingObject>();
+                    if(so != null) so.spawn(2, player);
+
+                    spawnedSnowman = true;
+                }
+                return;   
+            }
+        //----------------------
+        
+        Types t = Types.None;
+
+        //row 0-4
+        //column level_progress
+        for(int i=1; i<6; i++)  //for all 5 rows...generate random objects
+        {
+            string s = TextArray[i, level_progress];
+            col_s[i - 1] = s;   //create column
+            
+            if(s == "0") t = Types.None;
+            else if(s == "1") t = Types.Snow;
+            else if(s == "2") t = Types.Rock;
+            else if(s == "3") t = Types.Wall;
+            else Debug.Log("s = " + s);
+
+            switch (t)
+            {
+                case Types.None:
+                break;
+                case Types.Snow: //snow
+                    g_obj = Instantiate(snow);
+                break;
+                case Types.Rock: //rock
+                    g_obj = Instantiate(rock);
+                break;
+                case Types.Wall: //wall
+                    g_obj = Instantiate(wall);
+                break;
+            }
+        
+            //spawn object
+            if(t != Types.None && g_obj != null)
+            {
+                g_obj.transform.parent = this.transform;
+                so = g_obj.GetComponent<ScrollingObject>();
+                if(so != null) so.spawn(i, player);
+            }
+        }
+
+        Debug.Log( "col[" + level_progress + "] = {" + col_s[0] + ", " + col_s[1] + ", " + col_s[2] + ", " + col_s[3] + ", " + col_s[4] + "}" );
+    }
+}
+
+
+/*
+void spawn()    //random
     {
         if(spawnedSnowman || !game_running) return;
 
@@ -167,24 +287,4 @@ public class SpawnObjects : MonoBehaviour
         //Debug.Log("Spawn! snow: " + snow_count + ", rock: " + rock_count + ", wall: " + wall_count + "\n;");
     }
 
-    public bool gameRunning()
-    {
-        return game_running;
-    }
-
-    public void gameOver(bool win = false)
-    {
-        game_running = false;
-
-        if(soundPlayer != null) 
-        {
-            if(win)
-                soundPlayer.victory();
-            else
-                soundPlayer.gameOver();
-        }
-        
-        gameObject.SetActive(false);
-    }
-
-}
+*/
