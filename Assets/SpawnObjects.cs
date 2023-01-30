@@ -9,8 +9,6 @@ public class SpawnObjects : MonoBehaviour
 
     int level_length = 100;
     int row_count = 5;
-
-
     int level_progress = 0;
 
     [SerializeField] GameObject snow;
@@ -151,10 +149,10 @@ public class SpawnObjects : MonoBehaviour
 
         //row 0-4
         //column level_progress
-        for(int i=1; i<6; i++)  //for all 5 rows...generate random objects
+        for(int i=0; i<5; i++)  //for all 5 rows...generate random objects
         {
-            string s = TextArray[i, level_progress];
-            col_s[i - 1] = s;   //create column
+            string s = TextArray[i+1, level_progress];
+            col_s[i] = s;   //create column
             
             if(s == "0") t = Types.None;
             else if(s == "1") t = Types.Snow;
